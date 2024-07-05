@@ -1,5 +1,5 @@
 .{
-    .name = "glslang-zig",
+    .name = "glslang",
     .version = "14.3.0-dev",
     .dependencies = .{
         // Mirror available: https://github.com/Games-by-Mason/glslang
