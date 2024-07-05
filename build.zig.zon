@@ -2,16 +2,19 @@
     .name = "glslang-zig",
     .version = "14.3.0-dev",
     .dependencies = .{
+        // Mirror available: https://github.com/Games-by-Mason/glslang
         .glslang = .{
-            .url = "https://github.com/Games-by-Mason/glslang/archive/5939e32b87487fa9c72ab336ebfcc5ae26d9ab6d.tar.gz",
+            .url = "https://github.com/KhronosGroup/glslang/archive/5939e32b87487fa9c72ab336ebfcc5ae26d9ab6d.tar.gz",
             .hash = "12208dc47665f2f0b449194c2762b516c72084aeb6a4a23dae5b454553484624e247",
         },
+        // Mirror available: https://github.com/Games-by-Mason/SPIRV-Tools
         .@"SPIRV-Tools" = .{
-            .url = "https://github.com/Games-by-Mason/SPIRV-Tools/archive/0cfe9e7219148716dfd30b37f4d21753f098707a.tar.gz",
+            .url = "https://github.com/KhronosGroup/SPIRV-Tools/archive/0cfe9e7219148716dfd30b37f4d21753f098707a.tar.gz",
             .hash = "1220244510c4e41974b60f1db782049add987edffb084634654592e3e818ef7623ad",
         },
+        // Mirror available: https://github.com/Games-by-Mason/SPIRV-Headers
         .@"SPIRV-Headers" = .{
-            .url = "https://github.com/Games-by-Mason/SPIRV-Headers/archive/2acb319af38d43be3ea76bfabf3998e5281d8d12.tar.gz",
+            .url = "https://github.com/KhronosGroup/SPIRV-Headers/archive/2acb319af38d43be3ea76bfabf3998e5281d8d12.tar.gz",
             .hash = "1220eff0275d47f8da9e66fe0f30cd0d9084bda079861a67c6a77528fbe82ed200bc",
         },
     },
