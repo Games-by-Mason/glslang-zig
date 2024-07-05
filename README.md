@@ -4,7 +4,9 @@ Glslang ported to the Zig build system.
 
 Contributions or bug reports are welcome if behavior differs from official build system.
 
-See [build.zig.zon](build.zig.zon) for current version info.
+## Version
+
+See [build.zig.zon](build.zig.zon) for current version info. Dependencies will be updated to point at the next glslang release when it's available ([this commit](https://github.com/KhronosGroup/glslang/commit/5939e32b87487fa9c72ab336ebfcc5ae26d9ab6d) is necessary for a good debug build experience.)
 
 ## Known Differences
 
