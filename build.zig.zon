@@ -22,6 +22,6 @@
         "LICENSE",
         "build.zig",
         "build.zig.zon",
-        "cached",
+        "generated",
     },
 }
