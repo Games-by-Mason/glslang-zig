@@ -11,6 +11,14 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
     const enable_opt = b.option(bool, "enable-opt", "Enables spirv-opt capability if present") orelse true;
 
+    // Set up installs steps
+    const install_step = b.getInstallStep();
+    const executables_step = b.step("executables", "Install the executables");
+    const libraries_step = b.step("libraries", "Install the libraries");
+
+    install_step.dependOn(executables_step);
+    install_step.dependOn(libraries_step);
+
     // Upstream Sources
     const spirv_tools_upstream = b.dependency("SPIRV-Tools", .{});
     const glslang_upstream = b.dependency("glslang", .{});
@@ -108,7 +116,7 @@ pub fn build(b: *std.Build) !void {
             },
             .flags = &flags,
         });
-        b.installArtifact(spirv_tools_build);
+        libraries_step.dependOn(&b.addInstallArtifact(spirv_tools_build, .{}).step);
     }
 
     // libSPIRV-Tools-diff
@@ -124,7 +132,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"diff.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_tools_diff_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spirv_tools_diff_static, .{}).step);
 
     // libSPIRV-Tools-link
     const spirv_tools_link_static = b.addStaticLibrary(.{
@@ -139,7 +147,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"linker.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_tools_link_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spirv_tools_link_static, .{}).step);
 
     // libSPIRV-Tools-lint
     const spirv_tools_lint_static = b.addStaticLibrary(.{
@@ -158,7 +166,7 @@ pub fn build(b: *std.Build) !void {
         },
         .flags = &flags,
     });
-    b.installArtifact(spirv_tools_lint_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spirv_tools_lint_static, .{}).step);
 
     // libSPIRC-Tools-opt
     const spirv_tools_opt_static = b.addStaticLibrary(.{
@@ -291,7 +299,7 @@ pub fn build(b: *std.Build) !void {
         },
         .flags = &flags,
     });
-    b.installArtifact(spirv_tools_opt_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spirv_tools_opt_static, .{}).step);
 
     // libSPIRC-Tools-reduce
     const spirv_tools_reduce_static = b.addStaticLibrary(.{
@@ -338,7 +346,7 @@ pub fn build(b: *std.Build) !void {
         },
         .flags = &flags,
     });
-    b.installArtifact(spirv_tools_reduce_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spirv_tools_reduce_static, .{}).step);
 
     // spirv-tools-util
     const spirv_tools_util_internal_static = b.addStaticLibrary(.{
@@ -372,7 +380,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"as.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_as_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_as_exe, .{}).step);
     const spirv_as_run_cmd = b.addRunArtifact(spirv_as_exe);
     spirv_as_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_as_run_cmd.addArgs(args);
@@ -397,7 +405,7 @@ pub fn build(b: *std.Build) !void {
         },
         .flags = &flags,
     });
-    b.installArtifact(spirv_cfg_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_cfg_exe, .{}).step);
     const spirv_cfg_run_cmd = b.addRunArtifact(spirv_cfg_exe);
     spirv_cfg_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_cfg_run_cmd.addArgs(args);
@@ -419,7 +427,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"dis.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_dis_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_dis_exe, .{}).step);
     const spirv_dis_run_cmd = b.addRunArtifact(spirv_dis_exe);
     spirv_dis_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_dis_run_cmd.addArgs(args);
@@ -443,7 +451,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"linker.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_link_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_link_exe, .{}).step);
     const spirv_link_run_cmd = b.addRunArtifact(spirv_link_exe);
     spirv_link_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_link_run_cmd.addArgs(args);
@@ -467,7 +475,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"lint.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_lint_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_lint_exe, .{}).step);
     const spirv_lint_run_cmd = b.addRunArtifact(spirv_lint_exe);
     spirv_lint_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_lint_run_cmd.addArgs(args);
@@ -492,7 +500,7 @@ pub fn build(b: *std.Build) !void {
         },
         .flags = &flags,
     });
-    b.installArtifact(spirv_objdump_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_objdump_exe, .{}).step);
     const spirv_objdump_run_cmd = b.addRunArtifact(spirv_objdump_exe);
     spirv_objdump_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_objdump_run_cmd.addArgs(args);
@@ -515,7 +523,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"opt.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_opt_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_opt_exe, .{}).step);
     const spirv_opt_run_cmd = b.addRunArtifact(spirv_opt_exe);
     spirv_opt_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_opt_run_cmd.addArgs(args);
@@ -539,7 +547,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"reduce.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_reduce_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_reduce_exe, .{}).step);
     const spirv_reduce_run_cmd = b.addRunArtifact(spirv_reduce_exe);
     spirv_reduce_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_reduce_run_cmd.addArgs(args);
@@ -561,7 +569,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"val.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spirv_val_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_val_exe, .{}).step);
     const spirv_val_run_cmd = b.addRunArtifact(spirv_val_exe);
     spirv_val_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_val_run_cmd.addArgs(args);
@@ -569,11 +577,10 @@ pub fn build(b: *std.Build) !void {
     spirv_val_run_step.dependOn(&spirv_val_run_cmd.step);
 
     // spirv-lesspipe.sh
-    const spirv_lesspipe_bin = b.addInstallBinFile(
+    executables_step.dependOn(&b.addInstallBinFile(
         spirv_tools_upstream.path("tools/lesspipe/spirv-lesspipe.sh"),
         "spirv-lesspipe.sh",
-    );
-    b.getInstallStep().dependOn(&spirv_lesspipe_bin.step);
+    ).step);
 
     // libGenericCodeGen
     const generic_code_gen_static = b.addStaticLibrary(.{
@@ -591,7 +598,7 @@ pub fn build(b: *std.Build) !void {
         .flags = &flags,
     });
     configureGlslangLibrary(generic_code_gen_static, enable_opt);
-    b.installArtifact(generic_code_gen_static);
+    libraries_step.dependOn(&b.addInstallArtifact(generic_code_gen_static, .{}).step);
 
     // libglslang-default-resource-limits
     const glslang_default_resource_limits_static = b.addStaticLibrary(.{
@@ -609,7 +616,7 @@ pub fn build(b: *std.Build) !void {
         .flags = &flags,
     });
     configureGlslangLibrary(glslang_default_resource_limits_static, enable_opt);
-    b.installArtifact(glslang_default_resource_limits_static);
+    libraries_step.dependOn(&b.addInstallArtifact(glslang_default_resource_limits_static, .{}).step);
 
     // libMachineIndependent
     const machine_independent_static = b.addStaticLibrary(.{
@@ -653,7 +660,7 @@ pub fn build(b: *std.Build) !void {
         .flags = &flags,
     });
     configureGlslangLibrary(machine_independent_static, enable_opt);
-    b.installArtifact(machine_independent_static);
+    libraries_step.dependOn(&b.addInstallArtifact(machine_independent_static, .{}).step);
 
     // libOSDependent
     const os_dependent_static = b.addStaticLibrary(.{
@@ -671,7 +678,7 @@ pub fn build(b: *std.Build) !void {
             &[_][]const u8{"glslang/OSDependent/Unix/ossource.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(os_dependent_static);
+    libraries_step.dependOn(&b.addInstallArtifact(os_dependent_static, .{}).step);
 
     // libSPIRV
     const spirv_static = b.addStaticLibrary(.{
@@ -697,7 +704,7 @@ pub fn build(b: *std.Build) !void {
         },
         .flags = &flags,
     });
-    b.installArtifact(spirv_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spirv_static, .{}).step);
 
     // libSPVRemapper
     const spv_remapper_static = b.addStaticLibrary(.{
@@ -712,7 +719,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"SPVRemapper.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(spv_remapper_static);
+    libraries_step.dependOn(&b.addInstallArtifact(spv_remapper_static, .{}).step);
 
     // libglslang
     const glslang_static = b.addStaticLibrary(.{
@@ -733,7 +740,7 @@ pub fn build(b: *std.Build) !void {
         .files = &.{"glslang/CInterface/glslang_c_interface.cpp"},
         .flags = &flags,
     });
-    b.installArtifact(glslang_static);
+    libraries_step.dependOn(&b.addInstallArtifact(glslang_static, .{}).step);
 
     // glslang
     const glslang_exe = b.addExecutable(.{
@@ -750,7 +757,7 @@ pub fn build(b: *std.Build) !void {
         .flags = &flags,
     });
     configureGlslangBinary(glslang_exe, enable_opt);
-    b.installArtifact(glslang_exe);
+    executables_step.dependOn(&b.addInstallArtifact(glslang_exe, .{}).step);
     const glslang_run_cmd = b.addRunArtifact(glslang_exe);
     glslang_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| glslang_run_cmd.addArgs(args);
@@ -772,7 +779,7 @@ pub fn build(b: *std.Build) !void {
         .flags = &flags,
     });
     configureGlslangBinary(spirv_remap_exe, enable_opt);
-    b.installArtifact(spirv_remap_exe);
+    executables_step.dependOn(&b.addInstallArtifact(spirv_remap_exe, .{}).step);
     const spirv_remap_run_cmd = b.addRunArtifact(spirv_remap_exe);
     spirv_remap_run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| spirv_remap_run_cmd.addArgs(args);
@@ -827,7 +834,7 @@ fn configureGlslangBinary(compile: *std.Build.Step.Compile, enable_opt: bool) vo
     compile.addIncludePath(glslang_upstream.path(""));
     compile.addIncludePath(b.path("generated/glslang"));
 
-    compile.defineCMacro("ENABLE_OPT", if (enable_opt) "1" else "0");
+    compile.root_module.addCMacro("ENABLE_OPT", if (enable_opt) "1" else "0");
 }
 
 fn configureGlslangLibrary(lib: *std.Build.Step.Compile, enable_opt: bool) void {
