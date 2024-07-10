@@ -1,6 +1,10 @@
 const std = @import("std");
 
-const flags = [_][]const u8{"-std=c++17"};
+const flags: []const []const u8 = &.{
+    "-std=c++17",
+    "-fno-exceptions",
+    "-fno-rtti",
+};
 const install_headers_options = .{
     .include_extensions = &[_][]const u8{ ".h", ".hpp", ".hpp11" },
 };
@@ -106,7 +110,7 @@ pub fn build(b: *std.Build) !void {
                 "val/validate_type.cpp",
                 "val/validation_state.cpp",
             },
-            .flags = &flags,
+            .flags = flags,
         });
         b.installArtifact(spirv_tools_build);
     }
@@ -122,7 +126,7 @@ pub fn build(b: *std.Build) !void {
     spirv_tools_diff_static.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/diff"),
         .files = &.{"diff.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_tools_diff_static);
 
@@ -137,7 +141,7 @@ pub fn build(b: *std.Build) !void {
     spirv_tools_link_static.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("source/link"),
         .files = &.{"linker.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_tools_link_static);
 
@@ -156,7 +160,7 @@ pub fn build(b: *std.Build) !void {
             "lint_divergent_derivatives.cpp",
             "linter.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_tools_lint_static);
 
@@ -289,7 +293,7 @@ pub fn build(b: *std.Build) !void {
             "workaround1209.cpp",
             "wrap_opkill.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_tools_opt_static);
 
@@ -336,7 +340,7 @@ pub fn build(b: *std.Build) !void {
             "structured_loop_to_selection_reduction_opportunity.cpp",
             "structured_loop_to_selection_reduction_opportunity_finder.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_tools_reduce_static);
 
@@ -354,7 +358,7 @@ pub fn build(b: *std.Build) !void {
             "flags.cpp",
             "cli_consumer.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
 
     // spirv-as
@@ -370,7 +374,7 @@ pub fn build(b: *std.Build) !void {
     spirv_as_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/as"),
         .files = &.{"as.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_as_exe);
     const spirv_as_run_cmd = b.addRunArtifact(spirv_as_exe);
@@ -395,7 +399,7 @@ pub fn build(b: *std.Build) !void {
             "bin_to_dot.cpp",
             "cfg.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_cfg_exe);
     const spirv_cfg_run_cmd = b.addRunArtifact(spirv_cfg_exe);
@@ -417,7 +421,7 @@ pub fn build(b: *std.Build) !void {
     spirv_dis_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/dis"),
         .files = &.{"dis.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_dis_exe);
     const spirv_dis_run_cmd = b.addRunArtifact(spirv_dis_exe);
@@ -441,7 +445,7 @@ pub fn build(b: *std.Build) !void {
     spirv_link_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/link"),
         .files = &.{"linker.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_link_exe);
     const spirv_link_run_cmd = b.addRunArtifact(spirv_link_exe);
@@ -465,7 +469,7 @@ pub fn build(b: *std.Build) !void {
     spirv_lint_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/lint"),
         .files = &.{"lint.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_lint_exe);
     const spirv_lint_run_cmd = b.addRunArtifact(spirv_lint_exe);
@@ -490,7 +494,7 @@ pub fn build(b: *std.Build) !void {
             "extract_source.cpp",
             "objdump.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_objdump_exe);
     const spirv_objdump_run_cmd = b.addRunArtifact(spirv_objdump_exe);
@@ -513,7 +517,7 @@ pub fn build(b: *std.Build) !void {
     spirv_opt_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/opt"),
         .files = &.{"opt.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_opt_exe);
     const spirv_opt_run_cmd = b.addRunArtifact(spirv_opt_exe);
@@ -537,7 +541,7 @@ pub fn build(b: *std.Build) !void {
     spirv_reduce_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/reduce"),
         .files = &.{"reduce.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_reduce_exe);
     const spirv_reduce_run_cmd = b.addRunArtifact(spirv_reduce_exe);
@@ -559,7 +563,7 @@ pub fn build(b: *std.Build) !void {
     spirv_val_exe.addCSourceFiles(.{
         .root = spirv_tools_upstream.path("tools/val"),
         .files = &.{"val.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_val_exe);
     const spirv_val_run_cmd = b.addRunArtifact(spirv_val_exe);
@@ -588,7 +592,7 @@ pub fn build(b: *std.Build) !void {
             "CodeGen.cpp",
             "Link.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     configureGlslangLibrary(generic_code_gen_static, enable_opt);
     b.installArtifact(generic_code_gen_static);
@@ -606,7 +610,7 @@ pub fn build(b: *std.Build) !void {
             "resource_limits_c.cpp",
             "ResourceLimits.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     configureGlslangLibrary(glslang_default_resource_limits_static, enable_opt);
     b.installArtifact(glslang_default_resource_limits_static);
@@ -650,7 +654,7 @@ pub fn build(b: *std.Build) !void {
             "SymbolTable.cpp",
             "Versions.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     configureGlslangLibrary(machine_independent_static, enable_opt);
     b.installArtifact(machine_independent_static);
@@ -669,7 +673,7 @@ pub fn build(b: *std.Build) !void {
             &[_][]const u8{"glslang/OSDependent/Windows/ossource.cpp"}
         else
             &[_][]const u8{"glslang/OSDependent/Unix/ossource.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(os_dependent_static);
 
@@ -695,7 +699,7 @@ pub fn build(b: *std.Build) !void {
             "SpvPostProcess.cpp",
             "SpvTools.cpp",
         },
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spirv_static);
 
@@ -710,7 +714,7 @@ pub fn build(b: *std.Build) !void {
     spv_remapper_static.addCSourceFiles(.{
         .root = glslang_upstream.path("SPIRV"),
         .files = &.{"SPVRemapper.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(spv_remapper_static);
 
@@ -731,7 +735,7 @@ pub fn build(b: *std.Build) !void {
     glslang_static.addCSourceFiles(.{
         .root = glslang_upstream.path(""),
         .files = &.{"glslang/CInterface/glslang_c_interface.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     b.installArtifact(glslang_static);
 
@@ -747,7 +751,7 @@ pub fn build(b: *std.Build) !void {
     glslang_exe.addCSourceFiles(.{
         .root = glslang_upstream.path("StandAlone"),
         .files = &.{"StandAlone.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     configureGlslangBinary(glslang_exe, enable_opt);
     b.installArtifact(glslang_exe);
@@ -769,7 +773,7 @@ pub fn build(b: *std.Build) !void {
     spirv_remap_exe.addCSourceFiles(.{
         .root = glslang_upstream.path("StandAlone"),
         .files = &.{"spirv-remap.cpp"},
-        .flags = &flags,
+        .flags = flags,
     });
     configureGlslangBinary(spirv_remap_exe, enable_opt);
     b.installArtifact(spirv_remap_exe);

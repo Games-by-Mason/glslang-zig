@@ -13,6 +13,7 @@ See [build.zig.zon](build.zig.zon) for current version info. Dependencies will b
 * The official build process has a web target for the `glslang` artifact, but this project does not. Contributions are welcome.
 * The official build process symlinks `glslang` to `glslangValidator`. This build outputs `glslangValidator` instead of `glslang` and does not provide a symlink because the library artifact is already named `glslang`.
 * The tests are not built.
+* Compiler flags for exceptions, rtti, etc are not configurable (see [build.zig](build.zig) for current values.)
 
 ## How To Change the Glslang Version
 
