@@ -828,7 +828,7 @@ fn configureGlslangBinary(compile: *std.Build.Step.Compile, enable_opt: bool) vo
     compile.addIncludePath(glslang_upstream.path(""));
     compile.addIncludePath(b.path("generated/glslang"));
 
-    compile.defineCMacro("ENABLE_OPT", if (enable_opt) "1" else "0");
+    compile.root_module.addCMacro("ENABLE_OPT", if (enable_opt) "1" else "0");
 }
 
 fn configureGlslangLibrary(lib: *std.Build.Step.Compile, enable_opt: bool) void {
