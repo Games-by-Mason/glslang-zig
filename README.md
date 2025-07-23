@@ -4,9 +4,13 @@ Glslang ported to the Zig build system.
 
 Contributions or bug reports are welcome if behavior differs from official build system.
 
+# Zig Version
+
+[`main`](https://github.com/Games-by-Mason/glslang-zig/tree/main) loosely tracks Zig master. For support for Zig 0.14.0, use [v1.0.0](https://github.com/Games-by-Mason/glslang-zig/releases/tag/v1.0.0).
+
 ## Usage
 
-See [shader_compiler](https://github.com/Games-by-Mason/shader_compiler) for example usage.
+See [glslang-zig](https://github.com/Games-by-Mason/glslang-zig) for example usage.
 
 ## Version
 

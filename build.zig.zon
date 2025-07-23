@@ -2,7 +2,7 @@
     .name = .glslang,
     .fingerprint = 0x274a355f0fac978,
     .version = "1.4.309",
-    .minimum_zig_version = "0.14.0",
+    .minimum_zig_version = "0.15.0-dev.1145+3ae0ba096",
     .dependencies = .{
         // Mirror available: https://github.com/Games-by-Mason/glslang
         .glslang = .{

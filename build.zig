@@ -17,15 +17,21 @@ pub fn build(b: *std.Build) !void {
     const glslang_upstream = b.dependency("glslang", .{});
 
     // libspirv-tools
-    const spirv_tools_static = b.addStaticLibrary(.{
+    const spirv_tools_static = b.addLibrary(.{
         .name = "SPIRV-Tools",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
-    const spirv_tools_shared = b.addSharedLibrary(.{
+    const spirv_tools_shared = b.addLibrary(.{
         .name = "SPIRV-Tools-shared",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .dynamic,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     const spirv_tools_builds = [_]*std.Build.Step.Compile{ spirv_tools_static, spirv_tools_shared };
     for (spirv_tools_builds) |spirv_tools_build| {
@@ -116,10 +122,13 @@ pub fn build(b: *std.Build) !void {
     }
 
     // libSPIRV-Tools-diff
-    const spirv_tools_diff_static = b.addStaticLibrary(.{
+    const spirv_tools_diff_static = b.addLibrary(.{
         .name = "SPIRV-Tools-diff",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_tools_diff_static.linkLibCpp();
     configureSpirvToolsLibrary(spirv_tools_diff_static);
@@ -131,10 +140,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spirv_tools_diff_static);
 
     // libSPIRV-Tools-link
-    const spirv_tools_link_static = b.addStaticLibrary(.{
+    const spirv_tools_link_static = b.addLibrary(.{
         .name = "SPIRV-Tools-link",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_tools_link_static.linkLibCpp();
     configureSpirvToolsLibrary(spirv_tools_link_static);
@@ -146,10 +158,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spirv_tools_link_static);
 
     // libSPIRV-Tools-lint
-    const spirv_tools_lint_static = b.addStaticLibrary(.{
+    const spirv_tools_lint_static = b.addLibrary(.{
         .name = "SPIRV-Tools-lint",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_tools_lint_static.linkLibCpp();
     configureSpirvToolsLibrary(spirv_tools_lint_static);
@@ -165,10 +180,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spirv_tools_lint_static);
 
     // libSPIRC-Tools-opt
-    const spirv_tools_opt_static = b.addStaticLibrary(.{
+    const spirv_tools_opt_static = b.addLibrary(.{
         .name = "SPIRV-Tools-opt",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_tools_opt_static.linkLibCpp();
     configureSpirvToolsLibrary(spirv_tools_opt_static);
@@ -297,10 +315,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spirv_tools_opt_static);
 
     // libSPIRC-Tools-reduce
-    const spirv_tools_reduce_static = b.addStaticLibrary(.{
+    const spirv_tools_reduce_static = b.addLibrary(.{
         .name = "SPIRV-Tools-reduce",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_tools_reduce_static.linkLibCpp();
     configureSpirvToolsLibrary(spirv_tools_reduce_static);
@@ -344,10 +365,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spirv_tools_reduce_static);
 
     // spirv-tools-util
-    const spirv_tools_util_internal_static = b.addStaticLibrary(.{
+    const spirv_tools_util_internal_static = b.addLibrary(.{
         .name = "spirv-tools-util",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_tools_util_internal_static.linkLibCpp();
     configureSpirvToolsLibrary(spirv_tools_util_internal_static);
@@ -363,8 +387,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-as
     const spirv_as_exe = b.addExecutable(.{
         .name = "spirv-as",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_as_exe.linkLibCpp();
     spirv_as_exe.linkLibrary(spirv_tools_static);
@@ -385,8 +411,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-cfg
     const spirv_cfg_exe = b.addExecutable(.{
         .name = "spirv-cfg",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_cfg_exe.linkLibCpp();
     spirv_cfg_exe.linkLibrary(spirv_tools_static);
@@ -410,8 +438,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-cfg
     const spirv_dis_exe = b.addExecutable(.{
         .name = "spirv-dis",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_dis_exe.linkLibCpp();
     spirv_dis_exe.linkLibrary(spirv_tools_static);
@@ -432,8 +462,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-link
     const spirv_link_exe = b.addExecutable(.{
         .name = "spirv-link",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_link_exe.linkLibCpp();
     spirv_link_exe.linkLibrary(spirv_tools_static);
@@ -456,8 +488,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-lint
     const spirv_lint_exe = b.addExecutable(.{
         .name = "spirv-lint",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_lint_exe.linkLibCpp();
     spirv_lint_exe.linkLibrary(spirv_tools_static);
@@ -480,8 +514,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-objdump
     const spirv_objdump_exe = b.addExecutable(.{
         .name = "spirv-objdump",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_objdump_exe.linkLibCpp();
     spirv_objdump_exe.linkLibrary(spirv_tools_static);
@@ -505,8 +541,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-opt
     const spirv_opt_exe = b.addExecutable(.{
         .name = "spirv-opt",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_opt_exe.linkLibCpp();
     spirv_opt_exe.linkLibrary(spirv_tools_opt_static);
@@ -528,8 +566,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-reduce
     const spirv_reduce_exe = b.addExecutable(.{
         .name = "spirv-reduce",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_reduce_exe.linkLibCpp();
     spirv_reduce_exe.linkLibrary(spirv_tools_reduce_static);
@@ -552,8 +592,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-val
     const spirv_val_exe = b.addExecutable(.{
         .name = "spirv-val",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_val_exe.linkLibCpp();
     spirv_val_exe.linkLibrary(spirv_tools_static);
@@ -579,10 +621,13 @@ pub fn build(b: *std.Build) !void {
     b.getInstallStep().dependOn(&spirv_lesspipe_bin.step);
 
     // libGenericCodeGen
-    const generic_code_gen_static = b.addStaticLibrary(.{
+    const generic_code_gen_static = b.addLibrary(.{
         .name = "GenericCodeGen",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     generic_code_gen_static.linkLibCpp();
     generic_code_gen_static.addCSourceFiles(.{
@@ -597,10 +642,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(generic_code_gen_static);
 
     // libglslang-default-resource-limits
-    const glslang_default_resource_limits_static = b.addStaticLibrary(.{
+    const glslang_default_resource_limits_static = b.addLibrary(.{
         .name = "glslang-default-resource-limits",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     glslang_default_resource_limits_static.linkLibCpp();
     glslang_default_resource_limits_static.addCSourceFiles(.{
@@ -615,10 +663,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(glslang_default_resource_limits_static);
 
     // libMachineIndependent
-    const machine_independent_static = b.addStaticLibrary(.{
+    const machine_independent_static = b.addLibrary(.{
         .name = "MachineIndependent",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     machine_independent_static.linkLibCpp();
     machine_independent_static.addCSourceFiles(.{
@@ -659,10 +710,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(machine_independent_static);
 
     // libOSDependent
-    const os_dependent_static = b.addStaticLibrary(.{
+    const os_dependent_static = b.addLibrary(.{
         .name = "OSDependent",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     os_dependent_static.linkLibCpp();
     configureGlslangLibrary(os_dependent_static, enable_opt);
@@ -677,10 +731,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(os_dependent_static);
 
     // libSPIRV
-    const spirv_static = b.addStaticLibrary(.{
+    const spirv_static = b.addLibrary(.{
         .name = "SPIRV",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_static.linkLibCpp();
     if (enable_opt) spirv_static.linkLibrary(spirv_tools_opt_static);
@@ -703,10 +760,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spirv_static);
 
     // libSPVRemapper
-    const spv_remapper_static = b.addStaticLibrary(.{
+    const spv_remapper_static = b.addLibrary(.{
         .name = "SPVRemapper",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spv_remapper_static.linkLibCpp();
     configureGlslangLibrary(spv_remapper_static, enable_opt);
@@ -718,10 +778,13 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(spv_remapper_static);
 
     // libglslang
-    const glslang_static = b.addStaticLibrary(.{
+    const glslang_static = b.addLibrary(.{
         .name = "glslang",
-        .target = target,
-        .optimize = optimize,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     glslang_static.linkLibCpp();
     glslang_static.linkLibrary(spirv_tools_static);
@@ -741,8 +804,10 @@ pub fn build(b: *std.Build) !void {
     // glslang
     const glslang_exe = b.addExecutable(.{
         .name = "glslangValidator",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     glslang_exe.linkLibCpp();
     glslang_exe.linkLibrary(glslang_static);
@@ -763,8 +828,10 @@ pub fn build(b: *std.Build) !void {
     // spirv-remap
     const spirv_remap_exe = b.addExecutable(.{
         .name = "spirv-remap",
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     spirv_remap_exe.linkLibCpp();
     spirv_remap_exe.linkLibrary(spv_remapper_static);
