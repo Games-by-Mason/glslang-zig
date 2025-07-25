@@ -1,6 +1,6 @@
 # Glslang Zig
 
-Glslang ported to the Zig build system.
+Glslang ported to the Zig build system. If you're compiling shaders from the build system, see also [shader_compiler](https://github.com/Games-by-Mason/shader_compiler).
 
 Contributions or bug reports are welcome if behavior differs from official build system.
 
