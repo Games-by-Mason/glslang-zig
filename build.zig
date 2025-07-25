@@ -815,7 +815,7 @@ pub fn build(b: *std.Build) !void {
     glslang_exe.addCSourceFiles(.{
         .root = glslang_upstream.path("StandAlone"),
         .files = &.{"StandAlone.cpp"},
-        .flags = flags,
+        .flags = flags ++ .{"-DENABLE_SPIRV"},
     });
     configureGlslangBinary(glslang_exe, enable_opt);
     b.installArtifact(glslang_exe);
